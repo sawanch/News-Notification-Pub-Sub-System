@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  server1:
+    build: ./master_node
+    stdin_open: true
+    tty: true
+    ports:
+      - 5040:5040
+    networks:
+      - pub-sub-distributed-rendezvous
+    container_name: server1_Measure
+
+  server2:
+    build: ./secondary_node
+    stdin_open: true
+    tty: true
+    ports:
+      - 5041:5041
+    networks:
+      - pub-sub-distributed-rendezvous
+    depends_on:
+      - server1
+    container_name: server2_Measure
+
+  client1:
+    build: ./subscriber_1
+    stdin_open: true
+    tty: true
+    networks:
+      - pub-sub-distributed-rendezvous
+    depends_on:
+      - server1
+    container_name: Tim_Measure
+
+  client2:
+    build: ./subscriber_2
+    stdin_open: true
+    tty: true
+    networks:
+      - pub-sub-distributed-rendezvous
+    depends_on:
+      - server2
+    container_name: Ankit_Measure
+
+networks:
+  pub-sub-distributed-rendezvous:
+    driver: bridge
